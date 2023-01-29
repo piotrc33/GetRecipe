@@ -39,6 +39,9 @@ android {
 }
 
 dependencies {
+    // Picasso, loading images
+    implementation 'com.squareup.picasso:picasso:2.71828'
+
     // Navigation
     def nav_version = "2.5.3"
     implementation "androidx.navigation:navigation-fragment:$nav_version"
