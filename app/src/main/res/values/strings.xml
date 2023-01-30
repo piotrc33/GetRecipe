@@ -7,7 +7,7 @@
 
     <string-array name="mealTypes">
         <item>Breakfast</item>
-        <item>Main Course</item>
+        <item>Lunch</item>
         <item>Dinner</item>
     </string-array>
 </resources>

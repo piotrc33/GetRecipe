@@ -5,11 +5,12 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.AdapterView
 import androidx.lifecycle.ViewModelProvider
-import com.example.getrecipe.R
 import com.example.getrecipe.api.Ingredient
 import com.example.getrecipe.api.Recipe
 import com.example.getrecipe.databinding.FragmentNewBinding
+import com.example.getrecipe.removeTagsFromString
 import com.example.getrecipe.viewModel.RecipesViewModel
 import com.squareup.picasso.Picasso
 import kotlinx.coroutines.CoroutineScope
@@ -20,12 +21,14 @@ class NewFragment : Fragment() {
 
     private lateinit var viewModel : RecipesViewModel
     private lateinit var binding: FragmentNewBinding
+    val recipeTypes: List<String> = listOf("breakfast", "lunch", "dinner")
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentNewBinding.inflate(inflater, container, false)
+        binding.spinner.setSelection(0)
 
         // SET ITEMS FROM API TO LAYOUT VIEWS
         viewModel = ViewModelProvider(requireActivity())[RecipesViewModel::class.java]
@@ -54,6 +57,23 @@ class NewFragment : Fragment() {
             }
         }
 
+        binding.spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                viewModel.recipeType = recipeTypes[position]
+            }
+
+            override fun onNothingSelected(parent: AdapterView<*>?) {
+                viewModel.recipeType = recipeTypes[0]
+            }
+        }
+
+        binding.saveButton.setOnClickListener {
+            if(viewModel.recipe.value != null) {
+                viewModel.insertRecipe(viewModel.convertRecipeToDB(viewModel.recipe.value!!))
+                viewModel.insertAllIngredients(viewModel.convertIngredientsToDB(viewModel.recipe.value!!.ingredients))
+            }
+        }
+
         return binding.root
     }
 
@@ -64,7 +84,7 @@ class NewFragment : Fragment() {
 
         // INGREDIENTS
         var ingredientString: String = "INGREDIENTS: \n\n"
-        val ingredients: List<Ingredient> = recipe.extendedIngredients
+        val ingredients: List<Ingredient> = recipe.ingredients
         ingredients.forEach { ingredient ->
             ingredientString += ingredient.name + " "
             ingredientString += ingredient.measures.metric.amount.toString() + " "
@@ -76,10 +96,12 @@ class NewFragment : Fragment() {
         // INSTRUCTIONS
 //            println(recipe.instructions)
         var instructionsString = "INSTRUCTIONS: \n\n"
-        instructionsString += recipe.instructions.replace(Regex("<[^>]*>"), "")
+        instructionsString += removeTagsFromString(recipe.instructions)
         binding.recipeInstructions.text = instructionsString
 
         binding.recipeIngredients.text = ingredientString
     }
+
+
 
 }

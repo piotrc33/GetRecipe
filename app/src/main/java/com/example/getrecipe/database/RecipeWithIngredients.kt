@@ -4,12 +4,12 @@ import androidx.room.Embedded
 import androidx.room.Relation
 
 data class RecipeWithIngredients(
-    @Embedded val recipe: Recipe,
+    @Embedded val recipeDB: RecipeDB,
 
     @Relation(
         parentColumn = "recipeId",
         entityColumn = "recipeId"
     )
 
-    val ingredients: List<Ingredient>
+    val ingredientDBS: List<IngredientDB>
 )

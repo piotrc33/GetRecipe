@@ -4,7 +4,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "ingredients")
-data class Ingredient(
+data class IngredientDB(
     // generating ids automatically because same ingredient with same id from api can be used multiple times to different recipes
     @PrimaryKey(autoGenerate = true)
     val id : Int,

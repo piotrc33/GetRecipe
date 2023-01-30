@@ -2,9 +2,12 @@ package com.example.getrecipe.viewModel
 
 import android.app.Application
 import androidx.lifecycle.*
+import com.example.getrecipe.api.Ingredient
 import com.example.getrecipe.api.Recipe
 import com.example.getrecipe.api.RecipesApi
 import com.example.getrecipe.base_url
+import com.example.getrecipe.database.IngredientDB
+import com.example.getrecipe.database.RecipeDB
 import com.example.getrecipe.database.SavedRecipesDatabase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -20,7 +23,8 @@ class RecipesViewModel(application: Application): AndroidViewModel(application) 
     var recipe = MutableLiveData<Recipe>()
     var currentRecipeIndex = 0
     var recipesInSession: List<Recipe> = listOf()
-    val getAllSavedRecipes: LiveData<List<com.example.getrecipe.database.Recipe>>
+    val getAllSavedRecipes: LiveData<List<RecipeDB>>
+    var recipeType: String = "breakfast"
 
     init {
         db = SavedRecipesDatabase.getDatabase(application)
@@ -28,6 +32,36 @@ class RecipesViewModel(application: Application): AndroidViewModel(application) 
         viewModelScope.launch {
             loadRecipe()
         }
+    }
+
+    fun insertRecipe(recipeDB: RecipeDB) {
+        viewModelScope.launch {
+            db.RecipesDao().insertRecipe(recipeDB)
+        }
+    }
+
+    fun insertAllIngredients(ingredientsDB: List<IngredientDB>) {
+        viewModelScope.launch {
+            db.RecipesDao().insertAllIngredients(ingredientsDB)
+        }
+    }
+
+    fun convertRecipeToDB(recipe: Recipe): RecipeDB{
+        return RecipeDB(
+            recipe.id,
+            recipe.title,
+            recipe.instructions,
+            recipe.image
+        )
+    }
+    fun convertIngredientsToDB(ingredients: List<Ingredient>): List<IngredientDB>{
+        var ingredientsDB: List<IngredientDB> = mutableListOf()
+        ingredients.forEach { i ->
+            // id can be anything, later generated automatically
+            val measure: String = i.measures.metric.amount.toString() + " " + i.measures.metric.unitShort
+            ingredientsDB += IngredientDB(0, i.name, measure, recipe.value!!.id)
+        }
+        return ingredientsDB
     }
 
     suspend fun loadRecipe() {
@@ -46,7 +80,7 @@ class RecipesViewModel(application: Application): AndroidViewModel(application) 
         val api = retrofit.create(RecipesApi::class.java)
 
         viewModelScope.launch {
-            recipe.value = getData(api, "breakfast")
+            recipe.value = getData(api, recipeType)
         }
     }
 

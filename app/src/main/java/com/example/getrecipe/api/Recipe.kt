@@ -1,13 +1,16 @@
 package com.example.getrecipe.api
 
+import com.google.gson.annotations.SerializedName
+
 data class Root(
     val recipes: List<Recipe>,
 )
 
 data class Recipe(
-    val id: Number,
+    val id: Int,
     val title: String,
-    val extendedIngredients: List<Ingredient>,
+    @SerializedName("extendedIngredients")
+    val ingredients: List<Ingredient>,
     val instructions: String,
     val image: String
 )
