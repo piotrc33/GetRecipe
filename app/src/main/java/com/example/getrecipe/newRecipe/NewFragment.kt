@@ -37,7 +37,6 @@ class NewFragment : Fragment() {
         }
 
         binding.nextButton.setOnClickListener {
-            println(viewModel.currentRecipeIndex)
             if(viewModel.currentRecipeIndex == viewModel.recipesInSession.size - 1) {
                 CoroutineScope(Dispatchers.Main).launch {
                     viewModel.loadRecipe()

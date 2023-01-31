@@ -15,12 +15,15 @@ interface RecipesDao {
     @Insert(onConflict = IGNORE)
     suspend fun insertRecipe(recipeDB: RecipeDB)
 
+    @Update
+    suspend fun updateRecipe(recipe: RecipeDB)
+
     @Query("SELECT * FROM saved_recipes")
     fun getSavedRecipes(): LiveData<List<RecipeDB>>
 
-    @Transaction
-    @Query("SELECT * FROM saved_recipes WHERE recipeId = :recipeId")
-    suspend fun getRecipeWithIngredients(recipeId: String): List<RecipeWithIngredients>
+//    @Transaction
+//    @Query("SELECT * FROM saved_recipes WHERE recipeId = :recipeId")
+//    suspend fun getRecipeWithIngredients(recipeId: String): List<RecipeWithIngredients>
 
 
 //    @Insert(onConflict = REPLACE)

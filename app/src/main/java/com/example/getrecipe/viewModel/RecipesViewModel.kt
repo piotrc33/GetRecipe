@@ -21,14 +21,17 @@ import retrofit2.converter.gson.GsonConverterFactory
 class RecipesViewModel(application: Application): AndroidViewModel(application) {
     private val db: SavedRecipesDatabase
     var recipe = MutableLiveData<Recipe>()
-    var currentRecipeIndex = 0
-    var recipesInSession: List<Recipe> = listOf()
-    val getAllSavedRecipes: LiveData<List<RecipeDB>>
     var recipeType: String = "breakfast"
+
+    var recipesInSession: List<Recipe> = listOf()
+    var currentRecipeIndex = 0 // variable for index in current session
+
+    val getSavedRecipes: LiveData<List<RecipeDB>>
 
     init {
         db = SavedRecipesDatabase.getDatabase(application)
-        getAllSavedRecipes = db.RecipesDao().getSavedRecipes()
+        getSavedRecipes = db.RecipesDao().getSavedRecipes()
+        println(getSavedRecipes)
         viewModelScope.launch {
             loadRecipe()
         }
