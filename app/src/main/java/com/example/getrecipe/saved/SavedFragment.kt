@@ -22,18 +22,13 @@ class SavedFragment : Fragment() {
     ): View? {
         viewModel = ViewModelProvider(requireActivity())[RecipesViewModel::class.java]
         binding = FragmentSavedBinding.inflate(inflater, container, false)
-        binding.savedRecyclerView.setHasFixedSize(true)
-        binding.savedRecyclerView.layoutManager = LinearLayoutManager(context)
-        // SET RECYCLER VIEW ITEM ETC.
-        // here I should get all saved recipes from viewModel
-        println(viewModel.getSavedRecipes.value) // prints null
-        binding.info.text = viewModel.getSavedRecipes.value?.size.toString()
 
-        viewModel.getSavedRecipes.observe(viewLifecycleOwner) { recipe ->
-            println(recipe)
+        viewModel.getSavedRecipes.observe(viewLifecycleOwner) { recipes ->
+            val adapter = SavedAdapter(recipes)
+            binding.savedRecyclerView.layoutManager = LinearLayoutManager(context)
+            binding.savedRecyclerView.adapter = adapter
         }
 
-        // Inflate the layout for this fragment
         return binding.root
     }
 }

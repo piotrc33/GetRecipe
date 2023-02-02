@@ -8,6 +8,7 @@ import com.example.getrecipe.api.RecipesApi
 import com.example.getrecipe.base_url
 import com.example.getrecipe.database.IngredientDB
 import com.example.getrecipe.database.RecipeDB
+import com.example.getrecipe.database.RecipeWithIngredients
 import com.example.getrecipe.database.SavedRecipesDatabase
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
@@ -19,7 +20,7 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 class RecipesViewModel(application: Application): AndroidViewModel(application) {
-    private val db: SavedRecipesDatabase
+    val db: SavedRecipesDatabase
     var recipe = MutableLiveData<Recipe>()
     var recipeType: String = "breakfast"
 
@@ -27,11 +28,12 @@ class RecipesViewModel(application: Application): AndroidViewModel(application) 
     var currentRecipeIndex = 0 // variable for index in current session
 
     val getSavedRecipes: LiveData<List<RecipeDB>>
+//    val getSavedRecipeWithIngredients: RecipeWithIngredients
 
     init {
         db = SavedRecipesDatabase.getDatabase(application)
         getSavedRecipes = db.RecipesDao().getSavedRecipes()
-        println(getSavedRecipes)
+//        getSavedRecipeWithIngredients = db.RecipesDao().getRecipeWithIngredients(recipeId = String)
         viewModelScope.launch {
             loadRecipe()
         }
