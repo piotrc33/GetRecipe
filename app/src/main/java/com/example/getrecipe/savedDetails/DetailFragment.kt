@@ -9,7 +9,10 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.example.getrecipe.R
 import com.example.getrecipe.databinding.FragmentDetailBinding
+import com.example.getrecipe.formIngredientsDBString
+import com.example.getrecipe.removeTagsFromString
 import com.example.getrecipe.viewModel.RecipesViewModel
+import com.squareup.picasso.Picasso
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -35,11 +38,21 @@ class DetailFragment : Fragment() {
 
         lifecycleScope.launch {
             val recipeWithIngredients = viewModel.db.RecipesDao().getRecipeWithIngredients(recipeId.toInt())
-//            println(recipeWithIngredients)
-            // SET THE UI TO SHOW THE DETAILS, DATA IS LOADED WELL
+            // TITLE
+            binding.recipeTitle.text = recipeWithIngredients.recipe.title
+
+            // IMAGE
+            Picasso.get().load(recipeWithIngredients.recipe.image).into(binding.recipeImage)
+
+            // INGREDIENTS
+            binding.recipeIngredients.text = formIngredientsDBString(recipeWithIngredients.ingredients)
+
+            // INSTRUCTIONS
+            var instructionsString = "INSTRUCTIONS: \n\n"
+            instructionsString += removeTagsFromString(recipeWithIngredients.recipe.instructions)
+            binding.recipeInstructions.text = instructionsString
         }
 
         return binding.root
     }
-
 }

@@ -14,8 +14,6 @@ class SavedFragment : Fragment() {
     private lateinit var binding: FragmentSavedBinding
     private lateinit var viewModel: RecipesViewModel
 
-    // LATER ON CREATE ADAPTER & VIEWHOLDER
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -24,7 +22,7 @@ class SavedFragment : Fragment() {
         binding = FragmentSavedBinding.inflate(inflater, container, false)
 
         viewModel.getSavedRecipes.observe(viewLifecycleOwner) { recipes ->
-            val adapter = SavedAdapter(recipes)
+            val adapter = SavedAdapter(recipes, viewModel)
             binding.savedRecyclerView.layoutManager = LinearLayoutManager(context)
             binding.savedRecyclerView.adapter = adapter
         }

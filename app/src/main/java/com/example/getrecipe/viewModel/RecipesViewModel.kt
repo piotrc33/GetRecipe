@@ -28,12 +28,10 @@ class RecipesViewModel(application: Application): AndroidViewModel(application) 
     var currentRecipeIndex = 0 // variable for index in current session
 
     val getSavedRecipes: LiveData<List<RecipeDB>>
-//    val getSavedRecipeWithIngredients: RecipeWithIngredients
 
     init {
         db = SavedRecipesDatabase.getDatabase(application)
         getSavedRecipes = db.RecipesDao().getSavedRecipes()
-//        getSavedRecipeWithIngredients = db.RecipesDao().getRecipeWithIngredients(recipeId = String)
         viewModelScope.launch {
             loadRecipe()
         }
@@ -42,6 +40,12 @@ class RecipesViewModel(application: Application): AndroidViewModel(application) 
     fun insertRecipe(recipeDB: RecipeDB) {
         viewModelScope.launch {
             db.RecipesDao().insertRecipe(recipeDB)
+        }
+    }
+    fun deleteRecipeWithIngredients(recipeId: Int) {
+        viewModelScope.launch {
+            db.RecipesDao().deleteRecipe(recipeId)
+            db.RecipesDao().deleteIngredients(recipeId)
         }
     }
 

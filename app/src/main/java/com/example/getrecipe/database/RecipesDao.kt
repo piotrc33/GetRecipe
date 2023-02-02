@@ -25,13 +25,9 @@ interface RecipesDao {
     @Query("SELECT * FROM saved_recipes WHERE recipeId = :recipeId")
     suspend fun getRecipeWithIngredients(recipeId: Int): RecipeWithIngredients
 
+    @Query("DELETE FROM saved_recipes WHERE recipeId = :recipeId")
+    suspend fun deleteRecipe(recipeId: Int)
 
-//    @Insert(onConflict = REPLACE)
-//    suspend fun insert(recipe: Recipe)
-//
-//    @Delete
-//    suspend fun delete(recipe: Recipe)
-//
-//    @Query("SELECT * FROM saved_recipes")
-//    fun getAllSavedRecipes() : LiveData<List<Recipe>>
+    @Query("DELETE FROM ingredients WHERE recipeId = :recipeId")
+    suspend fun deleteIngredients(recipeId: Int)
 }

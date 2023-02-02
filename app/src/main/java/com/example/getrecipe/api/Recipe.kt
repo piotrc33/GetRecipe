@@ -16,7 +16,6 @@ data class Recipe(
 )
 
 data class Ingredient(
-//    val id: Int,
     val name: String,
     val measures: Measures
 )

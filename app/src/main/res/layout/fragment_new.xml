@@ -74,12 +74,13 @@
 
         <TextView
             android:id="@+id/recipeTitle"
-            android:layout_width="wrap_content"
+            android:layout_width="300dp"
             android:layout_height="wrap_content"
             android:text="RECIPE TITLE"
             android:layout_marginTop="150dp"
             android:textSize="30sp"
             android:textStyle="bold"
+            android:gravity="center"
             android:layout_gravity="center_horizontal"/>
 
         <ImageView
@@ -99,6 +100,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
+                android:gravity="center"
                 android:text="RECIPE INGREDIENTS"
                 android:textSize="15sp"
                 android:textStyle="bold"
@@ -110,9 +112,10 @@
 
             <TextView
                 android:id="@+id/recipeInstructions"
-                android:layout_width="wrap_content"
+                android:layout_width="300dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
+                android:gravity="center"
                 android:text="RECIPE INSTRUCTIONS"
                 android:layout_marginTop="10dp"
                 android:textSize="15sp"

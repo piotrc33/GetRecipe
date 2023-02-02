@@ -10,6 +10,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.getrecipe.api.Ingredient
 import com.example.getrecipe.api.Recipe
 import com.example.getrecipe.databinding.FragmentNewBinding
+import com.example.getrecipe.formIngredientsString
 import com.example.getrecipe.removeTagsFromString
 import com.example.getrecipe.viewModel.RecipesViewModel
 import com.squareup.picasso.Picasso
@@ -30,12 +31,12 @@ class NewFragment : Fragment() {
         binding = FragmentNewBinding.inflate(inflater, container, false)
         binding.spinner.setSelection(0)
 
-        // SET ITEMS FROM API TO LAYOUT VIEWS
         viewModel = ViewModelProvider(requireActivity())[RecipesViewModel::class.java]
         viewModel.recipe.observe(viewLifecycleOwner) { recipe ->
             showRecipe(recipe)
         }
 
+        // HANDLING NEXT/BACK BUTTONS
         binding.nextButton.setOnClickListener {
             if(viewModel.currentRecipeIndex == viewModel.recipesInSession.size - 1) {
                 CoroutineScope(Dispatchers.Main).launch {
@@ -56,6 +57,7 @@ class NewFragment : Fragment() {
             }
         }
 
+        // FILTERING
         binding.spinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 viewModel.recipeType = recipeTypes[position]
@@ -66,6 +68,7 @@ class NewFragment : Fragment() {
             }
         }
 
+        // SAVING
         binding.saveButton.setOnClickListener {
             if(viewModel.recipe.value != null) {
                 viewModel.insertRecipe(viewModel.convertRecipeToDB(viewModel.recipe.value!!))
@@ -82,25 +85,12 @@ class NewFragment : Fragment() {
         Picasso.get().load(recipe.image).into(binding.recipeImage)
 
         // INGREDIENTS
-        var ingredientString: String = "INGREDIENTS: \n\n"
-        val ingredients: List<Ingredient> = recipe.ingredients
-        ingredients.forEach { ingredient ->
-            ingredientString += ingredient.name + " "
-            ingredientString += ingredient.measures.metric.amount.toString() + " "
-            ingredientString += ingredient.measures.metric.unitShort
-            ingredientString += "\n"
-
-        }
+        binding.recipeIngredients.text = formIngredientsString(recipe.ingredients)
 
         // INSTRUCTIONS
-//            println(recipe.instructions)
         var instructionsString = "INSTRUCTIONS: \n\n"
         instructionsString += removeTagsFromString(recipe.instructions)
         binding.recipeInstructions.text = instructionsString
 
-        binding.recipeIngredients.text = ingredientString
     }
-
-
-
 }
